@@ -4,3 +4,4 @@ target/
 uploads/
 .env
 application-local.properties
+*.txt

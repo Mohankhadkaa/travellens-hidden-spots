@@ -10,30 +10,13 @@ A Spring Boot web application for discovering and sharing hidden travel destinat
 - Spring Data JPA
 - Spring Security
 - Thymeleaf
-- PostgreSQL
+- PostgreSQL / H2
 - Maven
 
 ## Requirements
 
 - Java 21+
 - Maven 3.8+
-- PostgreSQL 15+
-- Git
-
-## Database Setup
-
-1. Install PostgreSQL and create a database:
-
-```sql
-CREATE DATABASE travellens_db;
-```
-
-2. Update `src/main/resources/application.properties` with your PostgreSQL credentials:
-
-```properties
-spring.datasource.username=postgres
-spring.datasource.password=YOUR_POSTGRES_PASSWORD
-```
 
 ## Local Setup
 
@@ -43,20 +26,20 @@ git clone https://github.com/your-username/travellens-hidden-spots.git
 cd travellens-hidden-spots
 
 # Build the project
-mvn clean install
+mvn clean package
 
-# Run the application
-mvn spring-boot:run
-```
-
-## How to Run
-
-```bash
+# Run the application (H2 in-memory by default, no database setup needed)
 mvn spring-boot:run
 ```
 
 The application will start at `http://localhost:8080`.
 
-## Project Status
+## Default Admin Credentials
 
-This is a foundation project with the home page set up. Features such as user registration, login, post creation, and image upload will be added in subsequent iterations.
+- Email: `admin@travellens.com`
+- Password: `AdminPass123!`
+
+## Profiles
+
+- **default** (H2 in-memory database) — for development
+- **postgres** (PostgreSQL) — for production: `mvn spring-boot:run -Dspring-boot.run.profiles=postgres`
