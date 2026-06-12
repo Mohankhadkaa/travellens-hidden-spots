@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelLens - Discover Places Worth Remembering</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <div th:replace="~{fragments/navbar :: navbar(activePage='home', isTransparent=true)}"></div>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-bg" style="background-image: url('/images/hero.jpg')"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-badge"><i class="bi bi-compass"></i> Explore the Unexplored</div>
+            <h1>Discover Places<br><span class="highlight">Worth Remembering</span></h1>
+            <p>Uncover secret gems, local food spots, and off-the-beaten-path destinations shared by travelers who know where to go.</p>
+            <div class="hero-buttons">
+                <a href="/posts" class="btn btn-primary btn-lg"><i class="bi bi-search"></i> Explore Places</a>
+                <a sec:authorize="isAuthenticated()" href="/posts/new" class="btn btn-secondary btn-lg"><i class="bi bi-plus-circle"></i> Share a Place</a>
+                <a sec:authorize="!isAuthenticated()" href="/signup" class="btn btn-secondary btn-lg"><i class="bi bi-plus-circle"></i> Share a Place</a>
+            </div>
+            <div class="hero-search">
+                <form action="/posts/search" method="get" class="search-bar">
+                    <input type="text" name="keyword" placeholder="Search places, food, cities..." aria-label="Search">
+                    <button type="submit"><i class="bi bi-search"></i> Search</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-accent-line"></span>
+                <h2>Explore by Category</h2>
+                <p>Find exactly what you're looking for</p>
+            </div>
+            <div class="categories-grid">
+                <a href="/posts/search?category=Food" class="category-card">
+                    <div class="category-card-img" style="background-image: url('/images/food-category.jpg')"></div>
+                    <div class="category-card-overlay"></div>
+                    <div class="category-card-content">
+                        <h3>Local Food</h3>
+                        <p>Street eats, hidden cafes &amp; authentic cuisine</p>
+                    </div>
+                </a>
+                <a href="/posts/search?category=Nature" class="category-card">
+                    <div class="category-card-img" style="background-image: url('/images/nature-category.jpg')"></div>
+                    <div class="category-card-overlay"></div>
+                    <div class="category-card-content">
+                        <h3>Nature</h3>
+                        <p>Secret trails, waterfalls &amp; breathtaking views</p>
+                    </div>
+                </a>
+                <a href="/posts/search?category=City" class="category-card">
+                    <div class="category-card-img" style="background-image: url('/images/city-category.jpg')"></div>
+                    <div class="category-card-overlay"></div>
+                    <div class="category-card-content">
+                        <h3>City Life</h3>
+                        <p>Urban explorations &amp; local hangouts</p>
+                    </div>
+                </a>
+                <a href="/posts/search?category=Culture" class="category-card">
+                    <div class="category-card-img" style="background-image: url('/images/culture-category.jpg')"></div>
+                    <div class="category-card-overlay"></div>
+                    <div class="category-card-content">
+                        <h3>Culture</h3>
+                        <p>Heritage sites, art &amp; traditions</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED PLACES -->
+    <section class="section section-alt">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-accent-line"></span>
+                <h2>Featured Places</h2>
+                <p>Handpicked hidden gems from our community</p>
+            </div>
+            <div class="featured-grid">
+                <div class="post-card">
+                    <div class="post-card-img-wrap">
+                        <img src="/images/featured-place-1.jpg" alt="Mountain retreat" onerror="this.src='/images/default-post.jpg'">
+                        <span class="post-card-badge">Nature</span>
+                    </div>
+                    <div class="post-card-body">
+                        <h3>Secret Waterfall Trail</h3>
+                        <p class="post-card-location"><i class="bi bi-geo-alt"></i> Da Nang, Vietnam</p>
+                        <p class="post-card-excerpt">A hidden waterfall nestled deep in the jungle, known only to local hikers. The trail winds through ancient trees and leads to a crystal-clear pool.</p>
+                        <div class="post-card-footer">
+                            <span class="post-card-author"><i class="bi bi-person-circle"></i> Minh Nguyen</span>
+                            <a href="/posts" class="btn btn-dark btn-sm">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-card-img-wrap">
+                        <img src="/images/featured-place-2.jpg" alt="Street food" onerror="this.src='/images/default-post.jpg'">
+                        <span class="post-card-badge">Local Food</span>
+                    </div>
+                    <div class="post-card-body">
+                        <h3>Hidden Food Alley</h3>
+                        <p class="post-card-location"><i class="bi bi-geo-alt"></i> Tokyo, Japan</p>
+                        <p class="post-card-excerpt">Tucked between two busy streets, this narrow alley houses five generations of family-run food stalls serving the best ramen in the district.</p>
+                        <div class="post-card-footer">
+                            <span class="post-card-author"><i class="bi bi-person-circle"></i> Yuki Tanaka</span>
+                            <a href="/posts" class="btn btn-dark btn-sm">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-card">
+                    <div class="post-card-img-wrap">
+                        <img src="/images/featured-place-3.jpg" alt="Historic town" onerror="this.src='/images/default-post.jpg'">
+                        <span class="post-card-badge">Culture</span>
+                    </div>
+                    <div class="post-card-body">
+                        <h3>The Forgotten Quarter</h3>
+                        <p class="post-card-location"><i class="bi bi-geo-alt"></i> Porto, Portugal</p>
+                        <p class="post-card-excerpt">An entire neighborhood frozen in time, with azulejo-tiled buildings and a hidden courtyard where locals gather for fado music on summer evenings.</p>
+                        <div class="post-card-footer">
+                            <span class="post-card-author"><i class="bi bi-person-circle"></i> Sofia Costa</span>
+                            <a href="/posts" class="btn btn-dark btn-sm">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-accent-line"></span>
+                <h2>How It Works</h2>
+                <p>Three simple steps to start exploring</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon-wrap"><i class="bi bi-person-plus"></i></div>
+                    <span class="step-number">Step 01</span>
+                    <h3>Create an Account</h3>
+                    <p>Sign up in seconds and join a growing community of travel enthusiasts who share the places that matter to them.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon-wrap"><i class="bi bi-geo-alt"></i></div>
+                    <span class="step-number">Step 02</span>
+                    <h3>Share a Hidden Place</h3>
+                    <p>Post your favorite secret spots with photos and descriptions. Help others discover what makes your corner of the world special.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon-wrap"><i class="bi bi-binoculars"></i></div>
+                    <span class="step-number">Step 03</span>
+                    <h3>Discover New Experiences</h3>
+                    <p>Explore places shared by the community, plan your next adventure, and see the world through local eyes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATISTICS -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Places Discovered</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon"><i class="bi bi-cup-hot-fill"></i></div>
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Food Spots</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon"><i class="bi bi-building"></i></div>
+                    <div class="stat-number">20+</div>
+                    <div class="stat-label">Cities Covered</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+                    <div class="stat-number">Growing</div>
+                    <div class="stat-label">Community</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="cta-bg" style="background-image: url('/images/hero.jpg')"></div>
+        <div class="cta-content">
+            <h2>Know a Place Others Should Discover?</h2>
+            <p>Share your favorite hidden spots with the world and help fellow travelers find authentic experiences beyond the tourist trail.</p>
+            <a sec:authorize="isAuthenticated()" href="/posts/new" class="btn btn-primary btn-lg"><i class="bi bi-plus-circle"></i> Share Your Place</a>
+            <a sec:authorize="!isAuthenticated()" href="/signup" class="btn btn-primary btn-lg"><i class="bi bi-plus-circle"></i> Share Your Place</a>
+        </div>
+    </section>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

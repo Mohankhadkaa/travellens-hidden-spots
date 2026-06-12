@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<footer th:fragment="footer" class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="/" class="nav-logo">
+                    <img src="/images/logo.png" alt="TravelLens" class="nav-logo-img" onerror="this.style.display='none'" style="filter:brightness(0) invert(1)">
+                    <span class="nav-logo-text" style="color:#fff">TravelLens</span>
+                </a>
+                <p>Discover hidden places, local food spots, and off-the-beaten-path destinations shared by travelers around the world.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/posts">Explore</a></li>
+                    <li><a href="/posts">Categories</a></li>
+                    <li><a href="/">About</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Categories</h4>
+                <ul class="footer-links">
+                    <li><a href="/posts">Local Food</a></li>
+                    <li><a href="/posts">Nature</a></li>
+                    <li><a href="/posts">City Life</a></li>
+                    <li><a href="/posts">Culture</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <div class="footer-contact">
+                    <p><i class="bi bi-geo-alt"></i> TravelLens HQ</p>
+                    <p><i class="bi bi-envelope"></i> hello@travellens.com</p>
+                    <p><i class="bi bi-telephone"></i> +1 (555) 123-4567</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <p>&copy; <span th:text="${#temporals.year(#temporals.createNow())}">2026</span> TravelLens. All rights reserved. Made with <i class="bi bi-heart-fill" style="color:var(--accent)"></i> for explorers.</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

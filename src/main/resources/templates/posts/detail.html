@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${post.title} + ' - TravelLens'">Post - TravelLens</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <div th:replace="~{fragments/navbar :: navbar(activePage='', isTransparent=false)}"></div>
+
+    <div class="post-detail-wrapper">
+        <div class="post-detail-hero">
+            <img th:src="${post.imageUrl != null} ? ${post.imageUrl} : (${post.imageName != null and !#strings.isEmpty(post.imageName)} ? @{'/images/' + ${post.imageName}} : @{'/images/default-post.jpg'})"
+                 onerror="this.src='/images/default-post.jpg'" alt="Post image">
+            <div class="post-detail-hero-overlay"></div>
+        </div>
+
+        <div class="post-detail-container">
+            <div th:if="${success}" class="alert alert-success"><i class="bi bi-check-circle"></i> <span th:text="${success}"></span></div>
+
+            <div class="post-detail-card">
+                <h1 th:text="${post.title}">Title</h1>
+                <div class="post-detail-meta">
+                    <span th:if="${post.location}"><i class="bi bi-geo-alt"></i> <span th:text="${post.location}">Location</span></span>
+                    <span th:if="${post.category}"><i class="bi bi-tag"></i> <span th:text="${post.category}">Category</span></span>
+                    <span><i class="bi bi-calendar3"></i> <span th:text="${#temporals.format(post.createdAt, 'MMM dd, yyyy')}">Date</span></span>
+                    <span><i class="bi bi-person-circle"></i> <span th:text="${post.user.username}">Author</span></span>
+                </div>
+                <p class="post-detail-desc" th:text="${post.description}">Description</p>
+
+                <div sec:authorize="isAuthenticated()" class="post-detail-actions">
+                    <a th:if="${#authentication.name == post.user.email or #authorization.expression('hasRole(\"ADMIN\")')}"
+                       th:href="@{'/posts/' + ${post.id} + '/edit'}" class="btn btn-dark"><i class="bi bi-pencil"></i> Edit</a>
+                    <form th:if="${#authentication.name == post.user.email or #authorization.expression('hasRole(\"ADMIN\")')}"
+                          th:action="@{'/posts/' + ${post.id} + '/delete'}" method="post" style="display:inline">
+                        <button type="submit" class="btn-delete" onclick="return confirm('Delete this post permanently?')"><i class="bi bi-trash"></i> Delete</button>
+                    </form>
+                </div>
+            </div>
+
+            <a href="/posts" class="post-detail-back"><i class="bi bi-arrow-left"></i> Back to all posts</a>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

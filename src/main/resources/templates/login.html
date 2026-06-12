@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In - TravelLens</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <div th:replace="~{fragments/navbar :: navbar(activePage='', isTransparent=false)}"></div>
+
+    <div class="auth-page">
+        <div class="auth-sidebar">
+            <div class="auth-sidebar-bg" style="background-image: url('/images/hero.jpg')"></div>
+            <div class="auth-sidebar-overlay"></div>
+            <div class="auth-sidebar-content">
+                <div class="auth-quote-icon"><i class="bi bi-quote"></i></div>
+                <h2>Welcome Back</h2>
+                <p>Continue your journey of discovering hidden places and authentic experiences around the world.</p>
+            </div>
+        </div>
+        <div class="auth-main">
+            <div class="auth-card">
+                <div class="auth-logo-wrap">
+                    <img src="/images/logo.png" alt="TravelLens" onerror="this.style.display='none'">
+                    <h1>TravelLens</h1>
+                </div>
+                <h2>Log In</h2>
+                <p class="auth-subtitle">Access your travel journal</p>
+
+                <div th:if="${param.error}" class="alert alert-error">
+                    <i class="bi bi-exclamation-circle"></i> Invalid email or password
+                </div>
+                <div th:if="${param.success}" class="alert alert-success">
+                    <i class="bi bi-check-circle"></i> Registration successful! Please log in.
+                </div>
+
+                <form action="#" th:action="@{/login}" method="post" class="auth-form">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" th:if="${_csrf}">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-icon"><i class="bi bi-envelope"></i></span>
+                            <input type="email" id="username" name="username" placeholder="Enter your email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-icon"><i class="bi bi-lock"></i></span>
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-auth">Log In</button>
+                </form>
+
+                <p class="auth-switch">Don't have an account? <a href="/signup">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

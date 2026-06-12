@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Posts - TravelLens</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <div th:replace="~{fragments/navbar :: navbar(activePage='explore', isTransparent=false)}"></div>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Explore Posts</h1>
+            <p>Discover hidden places and food spots shared by the community</p>
+        </div>
+    </section>
+
+    <div th:if="${success}" class="container" style="margin-top:24px">
+        <div class="alert alert-success"><i class="bi bi-check-circle"></i> <span th:text="${success}"></span></div>
+    </div>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <form action="/posts/search" method="get" class="search-form">
+                <div class="search-input-group">
+                    <i class="bi bi-search search-input-icon"></i>
+                    <input type="text" name="keyword" class="search-input" placeholder="Search by title, location, category, or description..."
+                           th:value="${keyword}" aria-label="Search posts">
+                </div>
+                <div class="search-select-group">
+                    <select name="category" class="category-select">
+                        <option value="All Categories" th:selected="${category == null or category == '' or category == 'All Categories'}">All Categories</option>
+                        <option value="Food" th:selected="${category == 'Food'}">Food</option>
+                        <option value="Nature" th:selected="${category == 'Nature'}">Nature</option>
+                        <option value="City" th:selected="${category == 'City'}">City</option>
+                        <option value="Culture" th:selected="${category == 'Culture'}">Culture</option>
+                        <option value="Other" th:selected="${category == 'Other'}">Other</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary search-btn"><i class="bi bi-search"></i> Search</button>
+                <a href="/posts" class="btn btn-dark search-clear-btn"><i class="bi bi-x-lg"></i> Clear</a>
+            </form>
+        </div>
+    </section>
+
+    <!-- Search Result Info -->
+    <div th:if="${isSearch}" class="container">
+        <div class="search-result-info">
+            <span th:if="${keyword != null and !#strings.isEmpty(keyword)}">
+                Search results for: <strong th:text="${keyword}">keyword</strong>
+            </span>
+            <span th:if="${category != null and category != '' and category != 'All Categories'}">
+                <span th:if="${keyword != null and !#strings.isEmpty(keyword)}"> &mdash; </span>
+                Category: <strong th:text="${category}">category</strong>
+            </span>
+            <span class="search-result-count">
+                <span th:text="${resultCount}">0</span> result<span th:if="${resultCount != 1}">s</span>
+            </span>
+        </div>
+    </div>
+
+    <section class="post-section">
+        <div class="container">
+
+            <!-- No results (search) -->
+            <div th:if="${isSearch and #lists.isEmpty(posts)}" class="empty-state">
+                <div class="empty-state-icon"><i class="bi bi-search"></i></div>
+                <h3>No posts found</h3>
+                <p th:if="${keyword != null and !#strings.isEmpty(keyword)}">
+                    No posts match <strong th:text="${keyword}">keyword</strong>.
+                    Try a different search term or browse all posts.
+                </p>
+                <p th:if="${keyword == null or #strings.isEmpty(keyword)}">
+                    No posts found in this category. Try a different category or browse all posts.
+                </p>
+                <a href="/posts" class="btn btn-primary"><i class="bi bi-grid-3x3-gap"></i> Browse All Posts</a>
+            </div>
+
+            <!-- No posts yet (not a search) -->
+            <div th:if="${!isSearch and #lists.isEmpty(posts)}" class="empty-state">
+                <div class="empty-state-icon"><i class="bi bi-geo-alt"></i></div>
+                <p>No posts yet. Be the first to share a hidden place!</p>
+                <a sec:authorize="isAuthenticated()" href="/posts/new" class="btn btn-primary">Create Post</a>
+                <a sec:authorize="!isAuthenticated()" href="/login" class="btn btn-primary">Log in to create a post</a>
+            </div>
+
+            <div class="post-grid" th:if="${not #lists.isEmpty(posts)}">
+                <div class="post-card" th:each="post : ${posts}">
+                    <a th:href="@{'/posts/' + ${post.id}}" class="post-card-link">
+                        <div class="post-card-img-wrap">
+                            <img th:src="${post.imageUrl != null} ? ${post.imageUrl} : (${post.imageName != null and !#strings.isEmpty(post.imageName)} ? @{'/images/' + ${post.imageName}} : @{'/images/default-post.jpg'})"
+                                 onerror="this.src='/images/default-post.jpg'" alt="Post image">
+                            <span class="post-card-badge" th:if="${post.category}" th:text="${post.category}">Category</span>
+                        </div>
+                        <div class="post-card-body">
+                            <h3 th:text="${post.title}">Title</h3>
+                            <p class="post-card-location" th:if="${post.location}">
+                                <i class="bi bi-geo-alt"></i> <span th:text="${post.location}">Location</span>
+                            </p>
+                            <p class="post-card-excerpt" th:text="${#strings.abbreviate(post.description, 120)}">Description</p>
+                            <div class="post-card-footer">
+                                <span class="post-card-author"><i class="bi bi-person-circle"></i> <span th:text="${post.user.username}">Author</span></span>
+                                <span class="btn btn-dark btn-sm" style="pointer-events:none">View Details</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

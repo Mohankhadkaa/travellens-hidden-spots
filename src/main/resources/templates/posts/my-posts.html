@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Posts - TravelLens</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <div th:replace="~{fragments/navbar :: navbar(activePage='myposts', isTransparent=false)}"></div>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>My Posts</h1>
+            <p>Manage the hidden places and food spots you've shared</p>
+        </div>
+    </section>
+
+    <div th:if="${success}" class="container" style="margin-top:24px">
+        <div class="alert alert-success"><i class="bi bi-check-circle"></i> <span th:text="${success}"></span></div>
+    </div>
+
+    <section class="post-section">
+        <div class="container">
+            <div style="text-align:right;margin-bottom:28px">
+                <a href="/posts/new" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Create New Post</a>
+            </div>
+
+            <div th:if="${#lists.isEmpty(posts)}" class="empty-state">
+                <div class="empty-state-icon"><i class="bi bi-file-earmark-plus"></i></div>
+                <p>You haven't created any posts yet.</p>
+                <a href="/posts/new" class="btn btn-primary">Create Your First Post</a>
+            </div>
+
+            <div class="post-grid" th:if="${not #lists.isEmpty(posts)}">
+                <div class="post-card" th:each="post : ${posts}">
+                    <a th:href="@{'/posts/' + ${post.id}}" class="post-card-link">
+                        <div class="post-card-img-wrap">
+                            <img th:src="${post.imageUrl != null} ? ${post.imageUrl} : (${post.imageName != null and !#strings.isEmpty(post.imageName)} ? @{'/images/' + ${post.imageName}} : @{'/images/default-post.jpg'})"
+                                 onerror="this.src='/images/default-post.jpg'" alt="Post image">
+                            <span class="post-card-badge" th:if="${post.category}" th:text="${post.category}">Category</span>
+                        </div>
+                        <div class="post-card-body">
+                            <h3 th:text="${post.title}">Title</h3>
+                            <p class="post-card-location" th:if="${post.location}">
+                                <i class="bi bi-geo-alt"></i> <span th:text="${post.location}">Location</span>
+                            </p>
+                            <p class="post-card-excerpt" th:text="${#strings.abbreviate(post.description, 120)}">Description</p>
+                            <div class="post-card-footer">
+                                <span class="post-card-author"><i class="bi bi-person-circle"></i> <span th:text="${post.user.username}">Author</span></span>
+                                <div class="post-card-actions" style="display:flex;gap:8px">
+                                    <a th:href="@{'/posts/' + ${post.id} + '/edit'}" class="btn btn-dark btn-sm" style="pointer-events:auto"><i class="bi bi-pencil"></i></a>
+                                    <form th:action="@{'/posts/' + ${post.id} + '/delete'}" method="post" style="display:inline" onsubmit="return confirm('Delete this post permanently?')">
+                                        <button type="submit" class="btn-delete btn-sm" style="padding:6px 12px;font-size:0.82rem"><i class="bi bi-trash"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<div th:fragment="navbar(activePage, isTransparent)">
+<nav class="navbar" th:classappend="${isTransparent} ? '' : 'scrolled'">
+    <div class="nav-container">
+        <a href="/" class="nav-logo">
+            <img src="/images/logo.png" alt="TravelLens" class="nav-logo-img" onerror="this.style.display='none'">
+            <span class="nav-logo-text">TravelLens</span>
+        </a>
+        <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Toggle menu">
+            <i class="bi bi-list"></i>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="/" class="nav-link" th:classappend="${activePage == 'home'} ? 'active' : ''">Home</a></li>
+            <li><a href="/posts" class="nav-link" th:classappend="${activePage == 'explore'} ? 'active' : ''">Explore</a></li>
+            <li sec:authorize="isAuthenticated()"><a href="/my-posts" class="nav-link" th:classappend="${activePage == 'myposts'} ? 'active' : ''">My Posts</a></li>
+            <li sec:authorize="hasRole('ADMIN')"><a href="/admin" class="nav-link" th:classappend="${activePage == 'admin'} ? 'active' : ''">Admin Dashboard</a></li>
+            <li sec:authorize="isAuthenticated()"><a href="/posts/new" class="nav-link-signup"><i class="bi bi-plus-lg"></i> Add Place</a></li>
+            <li sec:authorize="!isAuthenticated()"><a href="/login" class="nav-link-login">Login</a></li>
+            <li sec:authorize="!isAuthenticated()"><a href="/signup" class="nav-link-signup">Sign Up</a></li>
+            <li sec:authorize="isAuthenticated()"><span class="nav-link-username"><i class="bi bi-person-circle"></i> <span sec:authentication="principal.displayName">User</span></span></li>
+            <li sec:authorize="isAuthenticated()"><a href="/logout" class="nav-link-logout">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var navbar = document.querySelector('.navbar');
+    if (navbar && !navbar.classList.contains('scrolled')) {
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 80) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    }
+    document.addEventListener('click', function(e) {
+        var nav = document.getElementById('navLinks');
+        if (nav && nav.classList.contains('open') && !e.target.closest('.navbar')) {
+            nav.classList.remove('open');
+        }
+    });
+});
+</script>
+</body>
+</html>
