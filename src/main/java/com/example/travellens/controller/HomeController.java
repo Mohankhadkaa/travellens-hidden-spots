@@ -1,8 +1,10 @@
 package com.example.travellens.controller;
 
+import com.example.travellens.entity.Post;
 import com.example.travellens.entity.User;
 import com.example.travellens.service.PostService;
 import com.example.travellens.service.UserService;
+import java.util.List;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +22,11 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String home() {
+    public String home(Model model) {
+        List<Post> featuredPosts = postService.getAllPosts().stream()
+                .limit(3)
+                .toList();
+        model.addAttribute("featuredPosts", featuredPosts);
         return "index";
     }
 

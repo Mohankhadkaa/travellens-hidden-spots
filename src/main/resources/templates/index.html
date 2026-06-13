@@ -85,7 +85,24 @@
                 <h2>Featured Places</h2>
                 <p>Handpicked hidden gems from our community</p>
             </div>
-            <div class="featured-grid">
+            <div class="featured-grid" th:if="${featuredPosts != null and !#lists.isEmpty(featuredPosts)}">
+                <div class="post-card" th:each="post : ${featuredPosts}">
+                    <div class="post-card-img-wrap">
+                        <img th:src="${post.displayImageUrl}" onerror="this.src='/images/default-post.jpg'" alt="Place image">
+                        <span class="post-card-badge" th:if="${post.category}" th:text="${post.category}">Category</span>
+                    </div>
+                    <div class="post-card-body">
+                        <h3 th:text="${post.title}">Place title</h3>
+                        <p class="post-card-location" th:if="${post.location}"><i class="bi bi-geo-alt"></i> <span th:text="${post.location}">Location</span></p>
+                        <p class="post-card-excerpt" th:text="${#strings.abbreviate(post.description, 120)}">Description</p>
+                        <div class="post-card-footer">
+                            <span class="post-card-author"><i class="bi bi-person-circle"></i> <span th:text="${post.user.username}">Author</span></span>
+                            <a th:href="@{'/posts/' + ${post.id}}" class="btn btn-dark btn-sm">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="featured-grid" th:if="${featuredPosts == null or #lists.isEmpty(featuredPosts)}">
                 <div class="post-card">
                     <div class="post-card-img-wrap">
                         <img src="/images/featured-place-1.jpg" alt="Mountain retreat" onerror="this.src='/images/default-post.jpg'">

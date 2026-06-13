@@ -22,6 +22,7 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/posts/new").authenticated()
                 .requestMatchers(HttpMethod.GET, "/posts", "/posts/**").permitAll()
+                .requestMatchers(HttpMethod.HEAD, "/posts", "/posts/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
