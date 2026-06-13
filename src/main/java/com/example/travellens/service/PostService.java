@@ -46,7 +46,11 @@ public class PostService {
         User managedUser = userRepository.getReferenceById(user.getId());
         Post post = new Post(title, location, category, description, null, managedUser);
 
-        if (imageFile != null && !imageFile.isEmpty() && cloudinaryImageService.isPresent()) {
+        if (imageFile != null && !imageFile.isEmpty() && cloudinaryImageService.isEmpty()) {
+            throw new ImageStorageException("Image uploads are not configured. Add Cloudinary credentials before uploading photos.");
+        }
+
+        if (imageFile != null && !imageFile.isEmpty()) {
             CloudinaryImageService.UploadResult result = cloudinaryImageService.get().upload(imageFile);
             if (result != null) {
                 post.setImageUrl(result.url());
@@ -68,7 +72,11 @@ public class PostService {
         post.setCategory(category);
         post.setDescription(description);
 
-        if (imageFile != null && !imageFile.isEmpty() && cloudinaryImageService.isPresent()) {
+        if (imageFile != null && !imageFile.isEmpty() && cloudinaryImageService.isEmpty()) {
+            throw new ImageStorageException("Image uploads are not configured. Add Cloudinary credentials before uploading photos.");
+        }
+
+        if (imageFile != null && !imageFile.isEmpty()) {
             CloudinaryImageService.UploadResult result = cloudinaryImageService.get().upload(imageFile);
             if (result != null) {
                 String oldPublicId = post.getImagePublicId();

@@ -12,6 +12,7 @@ A Spring Boot web application for discovering and sharing hidden travel destinat
 - Thymeleaf
 - PostgreSQL / H2
 - Maven
+- Cloudinary
 
 ## Requirements
 
@@ -22,7 +23,7 @@ A Spring Boot web application for discovering and sharing hidden travel destinat
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/travellens-hidden-spots.git
+git clone https://github.com/Mohankhadkaa/travellens-hidden-spots.git
 cd travellens-hidden-spots
 
 # Build the project
@@ -41,5 +42,29 @@ The application will start at `http://localhost:8080`.
 
 ## Profiles
 
-- **default** (H2 in-memory database) — for development
-- **postgres** (PostgreSQL) — for production: `mvn spring-boot:run -Dspring-boot.run.profiles=postgres`
+- **default** (H2 in-memory database) - for development
+- **postgres** (PostgreSQL) - for production: `mvn spring-boot:run -Dspring-boot.run.profiles=postgres`
+
+## Cloudinary Image Uploads
+
+Photo uploads use Cloudinary. Set these environment variables before uploading images:
+
+```bash
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
+
+If a user selects an image and Cloudinary is not configured, the app shows a clear error instead of saving the post without the photo.
+
+## Render Deployment
+
+This repo includes `Dockerfile` and `render.yaml` for Render. The blueprint creates and links a Render Postgres database automatically.
+
+When Render prompts for secret values, add:
+
+```bash
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```

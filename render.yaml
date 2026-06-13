@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: travellens-hidden-spots
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: postgres
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: travellens-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: travellens-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: travellens-db
+          property: password
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+
+databases:
+  - name: travellens-db
+    databaseName: travellens
+    user: travellens
+    plan: free
