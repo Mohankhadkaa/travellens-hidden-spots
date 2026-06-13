@@ -3,6 +3,7 @@ package com.example.travellens.repository;
 import com.example.travellens.entity.Post;
 import com.example.travellens.entity.User;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +18,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @EntityGraph(attributePaths = "user")
     List<Post> findByUserOrderByCreatedAtDesc(User user);
+
+    @EntityGraph(attributePaths = "user")
+    Optional<Post> findById(Long id);
 
     @Query("SELECT p FROM Post p LEFT JOIN FETCH p.user WHERE " +
            "(:keyword IS NULL OR :keyword = '' OR " +
