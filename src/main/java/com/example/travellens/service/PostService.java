@@ -36,8 +36,9 @@ public class PostService {
         return postRepository.findAllByOrderByCreatedAtDesc();
     }
 
+    @Transactional(readOnly = true)
     public Optional<Post> getPostById(Long id) {
-        return postRepository.findById(id);
+        return postRepository.findByIdWithUser(id);
     }
 
     public List<Post> getPostsByUser(User user) {

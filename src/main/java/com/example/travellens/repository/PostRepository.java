@@ -19,8 +19,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @EntityGraph(attributePaths = "user")
     List<Post> findByUserOrderByCreatedAtDesc(User user);
 
-    @EntityGraph(attributePaths = "user")
-    Optional<Post> findById(Long id);
+    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.user WHERE p.id = :id")
+    Optional<Post> findByIdWithUser(@Param("id") Long id);
 
     @Query("SELECT p FROM Post p LEFT JOIN FETCH p.user WHERE " +
            "(:keyword IS NULL OR :keyword = '' OR " +
