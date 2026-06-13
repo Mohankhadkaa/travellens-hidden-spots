@@ -20,12 +20,15 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final Optional<CloudinaryImageService> cloudinaryImageService;
+    private final LocalImageService localImageService;
 
     public PostService(PostRepository postRepository, UserRepository userRepository,
-                       Optional<CloudinaryImageService> cloudinaryImageService) {
+                       Optional<CloudinaryImageService> cloudinaryImageService,
+                       LocalImageService localImageService) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.cloudinaryImageService = cloudinaryImageService;
+        this.localImageService = localImageService;
     }
 
     public List<Post> getAllPosts() {
@@ -46,16 +49,8 @@ public class PostService {
         User managedUser = userRepository.getReferenceById(user.getId());
         Post post = new Post(title, location, category, description, null, managedUser);
 
-        if (imageFile != null && !imageFile.isEmpty() && cloudinaryImageService.isEmpty()) {
-            throw new ImageStorageException("Image uploads are not configured. Add Cloudinary credentials before uploading photos.");
-        }
-
         if (imageFile != null && !imageFile.isEmpty()) {
-            CloudinaryImageService.UploadResult result = cloudinaryImageService.get().upload(imageFile);
-            if (result != null) {
-                post.setImageUrl(result.url());
-                post.setImagePublicId(result.publicId());
-            }
+            saveImage(post, imageFile);
         }
 
         return postRepository.save(post);
@@ -72,20 +67,11 @@ public class PostService {
         post.setCategory(category);
         post.setDescription(description);
 
-        if (imageFile != null && !imageFile.isEmpty() && cloudinaryImageService.isEmpty()) {
-            throw new ImageStorageException("Image uploads are not configured. Add Cloudinary credentials before uploading photos.");
-        }
-
         if (imageFile != null && !imageFile.isEmpty()) {
-            CloudinaryImageService.UploadResult result = cloudinaryImageService.get().upload(imageFile);
-            if (result != null) {
-                String oldPublicId = post.getImagePublicId();
-                post.setImageUrl(result.url());
-                post.setImagePublicId(result.publicId());
-                if (oldPublicId != null) {
-                    cloudinaryImageService.get().delete(oldPublicId);
-                }
-            }
+            String oldPublicId = post.getImagePublicId();
+            String oldImageName = post.getImageName();
+            saveImage(post, imageFile);
+            deleteImage(oldPublicId, oldImageName);
         }
 
         return postRepository.save(post);
@@ -95,10 +81,35 @@ public class PostService {
     public void deletePost(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
-        if (post.getImagePublicId() != null) {
-            cloudinaryImageService.ifPresent(svc -> svc.delete(post.getImagePublicId()));
-        }
+        deleteImage(post.getImagePublicId(), post.getImageName());
         postRepository.delete(post);
+    }
+
+    private void saveImage(Post post, MultipartFile imageFile) {
+        if (cloudinaryImageService.isPresent()) {
+            CloudinaryImageService.UploadResult result = cloudinaryImageService.get().upload(imageFile);
+            if (result != null) {
+                post.setImageName(null);
+                post.setImageUrl(result.url());
+                post.setImagePublicId(result.publicId());
+            }
+            return;
+        }
+
+        LocalImageService.UploadResult result = localImageService.upload(imageFile);
+        if (result != null) {
+            post.setImageName(result.fileName());
+            post.setImageUrl(result.url());
+            post.setImagePublicId(null);
+        }
+    }
+
+    private void deleteImage(String publicId, String imageName) {
+        if (publicId != null) {
+            cloudinaryImageService.ifPresent(svc -> svc.delete(publicId));
+        } else {
+            localImageService.delete(imageName);
+        }
     }
 
     public List<Post> searchPosts(String keyword, String category) {
