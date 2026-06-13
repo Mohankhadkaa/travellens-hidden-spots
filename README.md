@@ -1,70 +1,130 @@
-# TravelLens - Hidden Places & Food Spots
+# 🌍 TravelLens - Hidden Places & Food Spots
 
-A Spring Boot web application for discovering and sharing hidden travel destinations and local food spots.
+**TravelLens** is a Spring Boot web application where users can discover, share, and manage hidden travel destinations, local food spots, and cultural places.
 
-## Main Technologies
+The platform allows users to create posts with images, search travel content, view public posts, and manage their own shared places.
 
-- Java 21
-- Spring Boot 3.2
-- Spring Web
-- Spring Data JPA
-- Spring Security
-- Thymeleaf
-- PostgreSQL / H2
-- Maven
-- Cloudinary
+---
 
-## Requirements
+## 📌 Project Overview
 
-- Java 21+
-- Maven 3.8+
+TravelLens was developed as a final web application project using **Spring Boot, PostgreSQL, JPA, Thymeleaf, and Spring Security**.
 
-## Local Setup
+The main goal of this project is to create a simple, useful, and user-friendly travel sharing platform where people can post hidden places and food spots that are not commonly found on normal travel websites.
 
-```bash
-# Clone the repository
-git clone https://github.com/Mohankhadkaa/travellens-hidden-spots.git
-cd travellens-hidden-spots
+---
 
-# Build the project
-mvn clean package
+## 👥 Team Members
 
-# Run the application (H2 in-memory by default, no database setup needed)
-mvn spring-boot:run
-```
+| Name                 | Role                        |
+| -------------------- | --------------------------- |
+| **KHADKA MOHAN**     | Developer                   |
+| **KHARKA KUSHAL**    | Demo Driver                 |
+| **BHATTARAI LAXMAN** | Database Manager / Deployer |
 
-The application will start at `http://localhost:8080`.
+---
 
-## Default Admin Credentials
+## ✨ Main Features
 
-- Email: `admin@travellens.com`
-- Password: `AdminPass123!`
+### 👤 User Features
 
-## Profiles
+* User registration
+* User login and logout
+* Secure authentication using Spring Security
+* Create travel or food posts
+* Upload image for each post
+* View all public posts
+* View post details
+* Search posts
+* View only the logged-in user's own posts
+* Edit or delete own posts
 
-- **default** (H2 in-memory database) - for development
-- **postgres** (PostgreSQL) - for production: `mvn spring-boot:run -Dspring-boot.run.profiles=postgres`
+### 🛠️ Admin Features
 
-## Cloudinary Image Uploads
+* Admin account support
+* Admin can manage posts and users
+* Role-based access control
 
-Photo uploads use Cloudinary. Set these environment variables before uploading images:
+### 📝 Post Features
 
-```bash
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-```
+* Title
+* Description
+* Location
+* Category
+* Image upload
+* Author information
+* Created date
 
-If a user selects an image and Cloudinary is not configured, the app shows a clear error instead of saving the post without the photo.
+---
 
-## Render Deployment
+## 💻 Technologies Used
 
-This repo includes `Dockerfile` and `render.yaml` for Render. The blueprint creates and links a Render Postgres database automatically.
+### Backend
 
-When Render prompts for secret values, add:
+* Java 21
+* Spring Boot 3.2
+* Spring Web
+* Spring Data JPA
+* Spring Security
+* Hibernate
 
-```bash
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+### Frontend
+
+* Thymeleaf
+* HTML5
+* CSS3
+* Bootstrap Icons
+
+### Database
+
+* PostgreSQL
+
+### Image Upload
+
+* Cloudinary image upload support
+* Default local image fallback
+
+### Build and Deployment
+
+* Maven
+* Docker
+* Render
+* GitHub
+
+---
+
+## 📁 Project Structure
+
+```text
+travellens-hidden-spots/
+├── src/
+│   └── main/
+│       ├── java/
+│       │   └── com/example/travellens/
+│       │       ├── controller/
+│       │       ├── model/
+│       │       ├── repository/
+│       │       ├── service/
+│       │       ├── config/
+│       │       └── TravelLensApplication.java
+│       │
+│       └── resources/
+│           ├── static/
+│           │   ├── css/
+│           │   └── images/
+│           │
+│           ├── templates/
+│           │   ├── fragments/
+│           │   ├── posts/
+│           │   ├── auth/
+│           │   └── index.html
+│           │
+│           └── application.properties
+│
+├── Dockerfile
+├── render.yaml
+├── pom.xml
+├── mvnw
+├── mvnw.cmd
+└── README.md
 ```
