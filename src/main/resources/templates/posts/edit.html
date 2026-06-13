@@ -40,7 +40,7 @@
                 <div class="form-group">
                     <label>Current Image</label>
                     <div class="current-image">
-                        <img th:src="${post.imageUrl != null} ? ${post.imageUrl} : (${post.imageName != null and !#strings.isEmpty(post.imageName)} ? @{'/images/' + ${post.imageName}} : @{'/images/default-post.jpg'})"
+                        <img th:src="${post.displayImageUrl}"
                              onerror="this.src='/images/default-post.jpg'" alt="Current image" class="preview-img">
                     </div>
                 </div>

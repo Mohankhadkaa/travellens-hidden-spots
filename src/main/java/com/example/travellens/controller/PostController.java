@@ -12,6 +12,9 @@ import java.util.Set;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -72,6 +75,22 @@ public class PostController {
             model.addAttribute("currentUserEmail", principal.getName());
         }
         return "posts/detail";
+    }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> viewPostImage(@PathVariable Long id) {
+        Post post = postService.getPostById(id)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+        byte[] imageData = post.getImageData();
+        if (imageData == null || imageData.length == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String contentType = post.getImageContentType() != null ? post.getImageContentType() : MediaType.IMAGE_JPEG_VALUE;
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=31536000")
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(imageData);
     }
 
     @GetMapping("/new")

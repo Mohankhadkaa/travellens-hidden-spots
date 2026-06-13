@@ -4,6 +4,7 @@ import com.example.travellens.entity.Post;
 import com.example.travellens.entity.User;
 import com.example.travellens.repository.PostRepository;
 import com.example.travellens.repository.UserRepository;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -92,15 +93,20 @@ public class PostService {
                 post.setImageName(null);
                 post.setImageUrl(result.url());
                 post.setImagePublicId(result.publicId());
+                post.setImageData(null);
+                post.setImageContentType(null);
             }
             return;
         }
 
-        LocalImageService.UploadResult result = localImageService.upload(imageFile);
-        if (result != null) {
-            post.setImageName(result.fileName());
-            post.setImageUrl(result.url());
+        try {
+            post.setImageName(imageFile.getOriginalFilename());
+            post.setImageUrl(null);
             post.setImagePublicId(null);
+            post.setImageData(imageFile.getBytes());
+            post.setImageContentType(imageFile.getContentType());
+        } catch (IOException e) {
+            throw new RuntimeException("Could not save uploaded image", e);
         }
     }
 

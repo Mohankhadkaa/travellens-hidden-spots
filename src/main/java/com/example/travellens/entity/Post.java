@@ -37,6 +37,12 @@ public class Post {
     @Column(name = "image_public_id")
     private String imagePublicId;
 
+    @Column(name = "image_data", columnDefinition = "bytea")
+    private byte[] imageData;
+
+    @Column(name = "image_content_type")
+    private String imageContentType;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -83,6 +89,27 @@ public class Post {
 
     public String getImagePublicId() { return imagePublicId; }
     public void setImagePublicId(String imagePublicId) { this.imagePublicId = imagePublicId; }
+
+    public byte[] getImageData() { return imageData; }
+    public void setImageData(byte[] imageData) { this.imageData = imageData; }
+
+    public String getImageContentType() { return imageContentType; }
+    public void setImageContentType(String imageContentType) { this.imageContentType = imageContentType; }
+
+    public String getDisplayImageUrl() {
+        if (imageData != null && imageData.length > 0 && id != null) {
+            return "/posts/" + id + "/image";
+        }
+        if (imageUrl != null && !imageUrl.isBlank() && !imageUrl.startsWith("/uploads/")) {
+            return imageUrl;
+        }
+        if (imageName != null && !imageName.isBlank()
+                && !imageName.contains("/")
+                && (imageName.startsWith("featured-") || imageName.endsWith("-category.jpg") || imageName.equals("default-post.jpg"))) {
+            return "/images/" + imageName;
+        }
+        return "/images/default-post.jpg";
+    }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

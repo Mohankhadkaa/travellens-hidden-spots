@@ -37,7 +37,7 @@
                 <div class="post-card" th:each="post : ${posts}">
                     <a th:href="@{'/posts/' + ${post.id}}" class="post-card-link">
                         <div class="post-card-img-wrap">
-                            <img th:src="${post.imageUrl != null} ? ${post.imageUrl} : (${post.imageName != null and !#strings.isEmpty(post.imageName)} ? @{'/images/' + ${post.imageName}} : @{'/images/default-post.jpg'})"
+                            <img th:src="${post.displayImageUrl}"
                                  onerror="this.src='/images/default-post.jpg'" alt="Post image">
                             <span class="post-card-badge" th:if="${post.category}" th:text="${post.category}">Category</span>
                         </div>

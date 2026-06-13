@@ -12,7 +12,7 @@
 
     <div class="post-detail-wrapper">
         <div class="post-detail-hero">
-            <img th:src="${post.imageUrl != null} ? ${post.imageUrl} : (${post.imageName != null and !#strings.isEmpty(post.imageName)} ? @{'/images/' + ${post.imageName}} : @{'/images/default-post.jpg'})"
+            <img th:src="${post.displayImageUrl}"
                  onerror="this.src='/images/default-post.jpg'" alt="Post image">
             <div class="post-detail-hero-overlay"></div>
         </div>
