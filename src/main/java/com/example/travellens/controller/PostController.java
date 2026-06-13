@@ -5,7 +5,6 @@ import com.example.travellens.entity.User;
 import com.example.travellens.service.CloudinaryImageService;
 import com.example.travellens.service.PostService;
 import com.example.travellens.service.UserService;
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -71,13 +70,18 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String viewPost(@PathVariable Long id, Model model, Principal principal) {
+    public String viewPost(@PathVariable Long id, Model model, Authentication authentication) {
         Post post = postService.getPostById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
         model.addAttribute("post", post);
-        if (principal != null) {
-            model.addAttribute("currentUserEmail", principal.getName());
+        boolean canManagePost = false;
+        if (authentication != null && authentication.isAuthenticated()) {
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+            canManagePost = postService.isOwnerOrAdmin(post, authentication.getName(), isAdmin);
+            model.addAttribute("currentUserEmail", authentication.getName());
         }
+        model.addAttribute("canManagePost", canManagePost);
         return "posts/detail";
     }
 
