@@ -56,7 +56,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView handleAll(Exception ex, HttpServletRequest request) {
-        log.error("Unhandled exception for {} {}: {}", request.getMethod(), request.getRequestURI(), ex.getMessage(), ex);
+        log.error("UNHANDLED EXCEPTION for {} {}: {} | Type: {}",
+                request.getMethod(), request.getRequestURI(), ex.getMessage(),
+                ex.getClass().getName(), ex);
         ModelAndView mav = new ModelAndView("error");
         mav.addObject("status", 500);
         mav.addObject("message", "An unexpected error occurred. Please try again or contact support.");

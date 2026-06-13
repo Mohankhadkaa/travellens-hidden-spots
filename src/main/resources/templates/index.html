@@ -96,7 +96,7 @@
                         <p class="post-card-location" th:if="${post.location}"><i class="bi bi-geo-alt"></i> <span th:text="${post.location}">Location</span></p>
                         <p class="post-card-excerpt" th:text="${#strings.abbreviate(post.description, 120)}">Description</p>
                         <div class="post-card-footer">
-                            <span class="post-card-author"><i class="bi bi-person-circle"></i> <span th:text="${post.user.username}">Author</span></span>
+                            <span class="post-card-author" th:if="${post.user != null}"><i class="bi bi-person-circle"></i> <span th:text="${post.user.username}">Author</span></span>
                             <a th:href="@{'/posts/' + ${post.id}}" class="btn btn-dark btn-sm">View Details</a>
                         </div>
                     </div>

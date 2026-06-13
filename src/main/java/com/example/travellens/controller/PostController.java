@@ -9,6 +9,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/posts")
 public class PostController {
+
+    private static final Logger log = LoggerFactory.getLogger(PostController.class);
 
     private final PostService postService;
     private final UserService userService;
@@ -146,8 +150,9 @@ public class PostController {
             redirectAttributes.addFlashAttribute("success", "Post created successfully!");
             return "redirect:/posts/" + post.getId();
         } catch (Exception e) {
-            model.addAttribute("error", "Failed to create post: " + e.getMessage());
-            return "posts/create";
+            log.error("Post creation failed for user {}: {}", authentication.getName(), e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "An unexpected error occurred. Your post may have been saved - check the posts list.");
+            return "redirect:/posts";
         }
     }
 
@@ -229,20 +234,25 @@ public class PostController {
             redirectAttributes.addFlashAttribute("success", "Post updated successfully!");
             return "redirect:/posts/" + id;
         } catch (Exception e) {
-            model.addAttribute("error", "Failed to update post: " + e.getMessage());
-            model.addAttribute("post", post);
-            return "posts/edit";
+            log.error("Post update failed for user {}: {}", authentication.getName(), e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "An unexpected error occurred during update.");
+            return "redirect:/posts/" + id;
         }
     }
 
     @PostMapping("/{id}/delete")
     public String deleteSubmit(@PathVariable Long id, Authentication authentication,
                                RedirectAttributes redirectAttributes) {
-        Post post = postService.getPostById(id)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
-        checkAccess(post, authentication);
-        postService.deletePost(id);
-        redirectAttributes.addFlashAttribute("success", "Post deleted successfully!");
+        try {
+            Post post = postService.getPostById(id)
+                    .orElseThrow(() -> new RuntimeException("Post not found"));
+            checkAccess(post, authentication);
+            postService.deletePost(id);
+            redirectAttributes.addFlashAttribute("success", "Post deleted successfully!");
+        } catch (Exception e) {
+            log.error("Post deletion failed for user {}: {}", authentication.getName(), e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "An unexpected error occurred during deletion.");
+        }
         return "redirect:/posts";
     }
 

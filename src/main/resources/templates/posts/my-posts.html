@@ -48,7 +48,7 @@
                             </p>
                             <p class="post-card-excerpt" th:text="${#strings.abbreviate(post.description, 120)}">Description</p>
                             <div class="post-card-footer">
-                                <span class="post-card-author"><i class="bi bi-person-circle"></i> <span th:text="${post.user.username}">Author</span></span>
+                                <span class="post-card-author" th:if="${post.user != null}"><i class="bi bi-person-circle"></i> <span th:text="${post.user.username}">Author</span></span>
                                 <div class="post-card-actions" style="display:flex;gap:8px">
                                     <a th:href="@{'/posts/' + ${post.id} + '/edit'}" class="btn btn-dark btn-sm" style="pointer-events:auto"><i class="bi bi-pencil"></i></a>
                                     <form th:action="@{'/posts/' + ${post.id} + '/delete'}" method="post" style="display:inline" onsubmit="return confirm('Delete this post permanently?')">
