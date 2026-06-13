@@ -5,3 +5,4 @@ uploads/
 .env
 application-local.properties
 *.txt
+*.log

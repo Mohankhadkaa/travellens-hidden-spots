@@ -31,9 +31,9 @@
                 <p class="post-detail-desc" th:text="${post.description}">Description</p>
 
                 <div sec:authorize="isAuthenticated()" class="post-detail-actions">
-                    <a th:if="${#authentication.name == post.user.email or #authorization.expression('hasRole(\"ADMIN\")')}"
+                    <a th:if="${post.user != null and (#authentication.name == post.user.email or #authorization.expression('hasRole(\"ADMIN\")'))}"
                        th:href="@{'/posts/' + ${post.id} + '/edit'}" class="btn btn-dark"><i class="bi bi-pencil"></i> Edit</a>
-                    <form th:if="${#authentication.name == post.user.email or #authorization.expression('hasRole(\"ADMIN\")')}"
+                    <form th:if="${post.user != null and (#authentication.name == post.user.email or #authorization.expression('hasRole(\"ADMIN\")'))}"
                           th:action="@{'/posts/' + ${post.id} + '/delete'}" method="post" style="display:inline">
                         <button type="submit" class="btn-delete" onclick="return confirm('Delete this post permanently?')"><i class="bi bi-trash"></i> Delete</button>
                     </form>

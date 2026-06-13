@@ -52,7 +52,8 @@
                                      onerror="this.src='/images/default-post.jpg'" alt="Post image" class="admin-thumb">
                             </td>
                             <td th:text="${post.title}">Title</td>
-                            <td th:text="${post.user.username}">Author</td>
+                            <td th:if="${post.user != null}" th:text="${post.user.username}">Author</td>
+                            <td th:if="${post.user == null}">Unknown</td>
                             <td><span class="admin-role-badge admin-role-user" th:text="${post.category}">Category</span></td>
                             <td th:text="${post.location}">Location</td>
                             <td style="white-space:nowrap">

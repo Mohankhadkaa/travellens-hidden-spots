@@ -5,6 +5,8 @@ import com.example.travellens.entity.User;
 import com.example.travellens.service.PostService;
 import com.example.travellens.service.UserService;
 import java.security.Principal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
+    private static final Logger log = LoggerFactory.getLogger(AdminController.class);
 
     private final UserService userService;
     private final PostService postService;
@@ -51,8 +55,13 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("error", "You cannot delete your own account.");
             return "redirect:/admin/users";
         }
-        userService.deleteUser(id);
-        redirectAttributes.addFlashAttribute("success", "User " + target.getEmail() + " deleted successfully.");
+        try {
+            userService.deleteUser(id);
+            redirectAttributes.addFlashAttribute("success", "User " + target.getEmail() + " deleted successfully.");
+        } catch (Exception e) {
+            log.error("Failed to delete user {}: {}", id, e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "Failed to delete user " + target.getEmail() + ".");
+        }
         return "redirect:/admin/users";
     }
 
@@ -64,8 +73,13 @@ public class AdminController {
 
     @PostMapping("/posts/{id}/delete")
     public String deletePost(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        postService.deletePost(id);
-        redirectAttributes.addFlashAttribute("success", "Post deleted successfully.");
+        try {
+            postService.deletePost(id);
+            redirectAttributes.addFlashAttribute("success", "Post deleted successfully.");
+        } catch (Exception e) {
+            log.error("Failed to delete post {}: {}", id, e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "Failed to delete post.");
+        }
         return "redirect:/admin/posts";
     }
 }
